@@ -1,0 +1,12 @@
+{
+    "auth": {
+        "email": "example@domain.com",
+        "username": "domain\\username",
+        "password": "Password"
+    },
+    "export": {
+        "last": 21,
+        "next": 90,
+        "filename": "output.ics"
+    }
+}
