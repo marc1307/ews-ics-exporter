@@ -1,4 +1,4 @@
-import json
+import json, os
 from datetime import datetime, timedelta
 
 from exchangelib import Account, Credentials, DELEGATE 
@@ -8,7 +8,7 @@ from exchangelib.items import MeetingRequest, MeetingCancellation
 from icalendar import Calendar, Event, vCalAddress, vText
 
 def readCfg():
-    with open('config.json', 'r') as file:
+    with open(os.path.dirname(os.path.realpath(__file__))+'/config.json', 'r') as file:
         config = json.load(file)
     return config
 
