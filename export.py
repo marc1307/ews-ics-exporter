@@ -27,6 +27,7 @@ def connectToMsx():
     return calendarItems
 
 def generateIcs(calendarItems):
+    cfg = readCfg()
     cal = Calendar()
 
     for item in calendarItems:
@@ -36,8 +37,12 @@ def generateIcs(calendarItems):
         event.add('description',    item.text_body)
         event.add('dtstart',        item.start)
         event.add('dtend',          item.end)
+        
         if item.location is not None:
             event.add('location',   item.location)
+
+        if item.categories is not None:
+            event.add('CATEGORIES', item.categories)
 
         organizer = vCalAddress(item.organizer.email_address)
         organizer.params['cn']      = item.organizer.name
@@ -64,14 +69,12 @@ def generateIcs(calendarItems):
 
         cal.add_component(event)
 
-    cfg = readCfg()
     write(cfg['export']['filename'], cal.to_ical().decode('utf-8'))
 
     # For better Debugging:
     # def readable(cal):
     #     return cal.to_ical().decode('utf-8').replace('\r\n', '\n').strip()
-    #write(cfg['export']['filename'], readable(cal))
-    
+    # write(cfg['export']['filename'], readable(cal))
 
 def write(filename, content):
     f = open(filename, "w")
