@@ -37,7 +37,7 @@ def generateIcs(calendarItems):
         event.add('description',    item.text_body)
         event.add('dtstart',        item.start)
         event.add('dtend',          item.end)
-        
+
         if item.location is not None:
             event.add('location',   item.location)
 
@@ -62,7 +62,7 @@ def generateIcs(calendarItems):
             for x in item.optional_attendees:
                 attendee = vCalAddress(x.mailbox.email_address)
                 attendee.params['cn']       = x.mailbox.name 
-                attendee.params['ROLE']     = vText('NON-PARTICIPANT')
+                attendee.params['ROLE']     = vText('OPT-PARTICIPANT')
                 if ParticipationState(x.response_type) != False:
                     attendee.params['PARTSTAT'] = ParticipationState(x.response_type)
                 event.add('attendee', attendee, encode=0)
