@@ -36,7 +36,8 @@ def generateIcs(calendarItems):
         event.add('description',    item.text_body)
         event.add('dtstart',        item.start)
         event.add('dtend',          item.end)
-        event.add('location',       item.location)
+        if item.location is not None:
+            event.add('location',   item.location)
 
         organizer = vCalAddress(item.organizer.email_address)
         organizer.params['cn']      = item.organizer.name
