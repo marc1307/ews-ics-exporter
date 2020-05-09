@@ -7,6 +7,7 @@
     "export": {
         "last": 21,
         "next": 90,
-        "filename": "output.ics"
+        "filename": "output.ics",
+        "calendarname": "My calendar"
     }
 }

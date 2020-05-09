@@ -29,6 +29,7 @@ def connectToMsx():
 def generateIcs(calendarItems):
     cfg = readCfg()
     cal = Calendar()
+    cal.add('NAME', cfg['export']['calendarname'])
 
     for item in calendarItems:
         event = Event()
