@@ -3,7 +3,7 @@ cached-property==1.5.1
 certifi==2020.4.5.1
 cffi==1.14.0
 chardet==3.0.4
-cryptography==2.9.2
+cryptography==3.0
 defusedxml==0.6.0
 dnspython==1.16.0
 exchangelib==3.1.1
@@ -12,7 +12,7 @@ idna==2.9
 isodate==0.6.0
 isort==4.3.21
 lazy-object-proxy==1.4.3
-lxml==4.5.0
+lxml==4.5.2
 mccabe==0.6.1
 ntlm-auth==1.4.0
 oauthlib==3.1.0
