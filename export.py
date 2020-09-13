@@ -5,7 +5,7 @@ from exchangelib import Account, Credentials, DELEGATE
 from exchangelib import CalendarItem, EWSDateTime
 from exchangelib.items import MeetingRequest, MeetingCancellation
 
-from icalendar import Calendar, Event, vCalAddress, vText
+from icalendar import Calendar, Event, vCalAddress, vText, vDate
 
 def readCfg():
     with open(os.path.dirname(os.path.realpath(__file__))+'/config.json', 'r') as file:
@@ -39,8 +39,16 @@ def generateIcs(calendarItems):
         event.add('uid',            item.id)
         event.add('description',    item.text_body)
         event.add('dtstart',        item.start)
-        event.add('dtend',          item.end)
+        event.add('dtend',          item.end)	
 
+        if item.is_all_day:
+            event['dtstart'] =        vDate(item.start.replace(hour=0, minute=0, second=0))
+            event['dtend'] =          vDate(item.end.replace(hour=0, minute=0, second=0))
+
+        if item.subject.startswith(tuple(cfg['manipulation']['convertToAllday']['startsWith'])):
+            event['dtstart'] =        vDate(item.start.replace(hour=0, minute=0, second=0))
+            event['dtend'] =          vDate(item.end.replace(hour=0, minute=0, second=0))
+    
         if item.location is not None:
             event.add('location',   item.location)
 

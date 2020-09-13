@@ -14,5 +14,12 @@
         "X-WR-CALNAME": "My calendar on iOS",
         "X-WR-CALDESC": "My calendars description on iOS",
 		"X-APPLE-TRAVEL-ADVISORY-BEHAVIOR": "AUTOMATIC"
+    },
+    "manipulation": {
+        "convertToAllday": {
+            "startsWith": [
+                "24x7 "
+            ]
+        }
     }
 }
