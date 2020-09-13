@@ -54,6 +54,9 @@ def generateIcs(calendarItems):
 
         if item.categories is not None:
             event.add('CATEGORIES', item.categories)
+            if cfg['manipulation']['prependCategoriesToBody']:
+                out = '\n'.join(item.categories)
+                event['description'] = out + '\n\n' + str(event['description'])
 
         organizer = vCalAddress(item.organizer.email_address)
         organizer.params['cn']      = item.organizer.name
