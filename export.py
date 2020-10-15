@@ -42,7 +42,9 @@ def generateIcs(calendarItems):
         event.add('dtend',          item.end)	
 
         if item.is_all_day:
+            item.start= item.start + timedelta(days=1)
             event['dtstart'] =        vDate(item.start.replace(hour=0, minute=0, second=0))
+            item.end= item.end + timedelta(days=1)
             event['dtend'] =          vDate(item.end.replace(hour=0, minute=0, second=0))
 
         if item.subject.startswith(tuple(cfg['manipulation']['convertToAllday']['startsWith'])):
