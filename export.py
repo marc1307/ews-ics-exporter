@@ -1,4 +1,4 @@
-import json, os
+import json, os, pytz
 from datetime import datetime, timedelta
 
 from exchangelib import Account, Credentials, DELEGATE 
@@ -34,12 +34,20 @@ def generateIcs(calendarItems):
         cal.add(key, value)
 
     for item in calendarItems:
+        try:
+            tzOverwriteStart = pytz.timezone(item._start_timezone.zone)
+            tzOverwriteEnd   = pytz.timezone(item._end_timezone.zone)
+            item.start       = item.start.astimezone(tz=tzOverwriteStart)
+            item.end         = item.end.astimezone(tz=tzOverwriteEnd)
+        except:
+            print("Meh. timezones...")
+
         event = Event()
         event.add('summary',        item.subject)
         event.add('uid',            item.id)
         event.add('description',    item.text_body)
         event.add('dtstart',        item.start)
-        event.add('dtend',          item.end)	
+        event.add('dtend',          item.end)
 
         if item.is_all_day:
             item.start= item.start + timedelta(days=1)
@@ -90,7 +98,7 @@ def generateIcs(calendarItems):
     # For better Debugging:
     # def readable(cal):
     #     return cal.to_ical().decode('utf-8').replace('\r\n', '\n').strip()
-    # write(cfg['export']['filename'], readable(cal))
+    # write(cfg['export']['filename']+".debug", readable(cal))
 
 def write(filename, content):
     f = open(filename, "w")
