@@ -45,9 +45,11 @@ def generateIcs(calendarItems):
         event = Event()
         event.add('summary',        item.subject)
         event.add('uid',            item.id)
-        event.add('description',    item.text_body)
         event.add('dtstart',        item.start)
         event.add('dtend',          item.end)
+        if item.text_body is not None:
+            event.add('description',    item.text_body)
+
 
         if item.is_all_day:
             item.start= item.start + timedelta(days=1)
@@ -66,7 +68,10 @@ def generateIcs(calendarItems):
             event.add('CATEGORIES', item.categories)
             if cfg['manipulation']['prependCategoriesToBody']:
                 out = '\n'.join(item.categories)
-                event['description'] = out + '\n\n' + str(event['description'])
+                if event.has_key('description'):
+                    event['description'] = out + '\n\n' + str(event['description'])
+                else:
+                    event.add('description', out)
 
         organizer = vCalAddress(item.organizer.email_address)
         organizer.params['cn']      = item.organizer.name
