@@ -43,7 +43,15 @@ def generateIcs(calendarItems):
             print("Meh. timezones...")
 
         event = Event()
-        event.add('summary',        item.subject)
+        if item.sensitivity == 'Private':
+            event.add('summary', "{} {}".format('🔒', item.subject))
+        else:
+            event.add('summary',    item.subject)
+        if (item.is_cancelled):
+            event['summary'] = "{} {}".format('❌', event['summary'])
+        elif (item.my_response_type == 'NoResponseReceived'):
+            event['summary'] = "{} {}".format('❓', event['summary'])
+
         event.add('uid',            item.id)
         event.add('dtstart',        item.start)
         event.add('dtend',          item.end)
@@ -81,6 +89,8 @@ def generateIcs(calendarItems):
         if item.required_attendees is not None:
             for x in item.required_attendees:
                 attendee = vCalAddress(x.mailbox.email_address)
+                if ((x.mailbox.email_address.lower() == cfg['auth']['email'].lower()) and (item.my_response_type is not None)):
+                    x.response_type = item.my_response_type
                 attendee.params['cn']       = x.mailbox.name 
                 attendee.params['ROLE']     = vText('REQ-PARTICIPANT')
                 if ParticipationState(x.response_type) != False:
@@ -90,6 +100,8 @@ def generateIcs(calendarItems):
         if item.optional_attendees is not None:
             for x in item.optional_attendees:
                 attendee = vCalAddress(x.mailbox.email_address)
+                if ((x.mailbox.email_address.lower() == cfg['auth']['email'].lower()) and (item.my_response_type is not None)):
+                    x.response_type = item.my_response_type
                 attendee.params['cn']       = x.mailbox.name 
                 attendee.params['ROLE']     = vText('OPT-PARTICIPANT')
                 if ParticipationState(x.response_type) != False:
