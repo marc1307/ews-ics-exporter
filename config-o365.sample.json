@@ -1,0 +1,26 @@
+{
+    "auth": {
+        "email": "example@domain.com",
+        "username": "example@domain.com",
+        "password": "Password"
+    },
+    "export": {
+        "last": 21,
+        "next": 90,
+        "filename": "output.ics"
+    },
+    "calAttr": {
+        "name": "My calendar",
+        "X-WR-CALNAME": "My calendar on iOS",
+        "X-WR-CALDESC": "My calendars description on iOS",
+		"X-APPLE-TRAVEL-ADVISORY-BEHAVIOR": "AUTOMATIC"
+    },
+    "manipulation": {
+        "convertToAllday": {
+            "startsWith": [
+                "24x7 "
+            ]
+        },
+        "prependCategoriesToBody": false
+    }
+}
