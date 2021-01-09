@@ -132,3 +132,6 @@ dmypy.json
 config.json
 examples
 *.ics
+
+# vscode
+.vscode
