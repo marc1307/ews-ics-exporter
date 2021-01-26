@@ -81,14 +81,14 @@ def generateIcs(calendarItems):
                 else:
                     event.add('description', out)
 
-        organizer = vCalAddress(item.organizer.email_address)
+        organizer = vCalAddress("MAILTO:{}".format(item.organizer.email_address))
         organizer.params['cn']      = item.organizer.name
         organizer.params['ROLE']    = vText('CHAIR')
         event.add('organizer', organizer)
 
         if item.required_attendees is not None:
             for x in item.required_attendees:
-                attendee = vCalAddress(x.mailbox.email_address)
+                attendee = vCalAddress("MAILTO:{}".format(x.mailbox.email_address))
                 if ((x.mailbox.email_address.lower() == cfg['auth']['email'].lower()) and (item.my_response_type is not None)):
                     x.response_type = item.my_response_type
                 attendee.params['cn']       = x.mailbox.name 
@@ -99,7 +99,7 @@ def generateIcs(calendarItems):
 
         if item.optional_attendees is not None:
             for x in item.optional_attendees:
-                attendee = vCalAddress(x.mailbox.email_address)
+                attendee = vCalAddress("MAILTO:{}".format(x.mailbox.email_address))
                 if ((x.mailbox.email_address.lower() == cfg['auth']['email'].lower()) and (item.my_response_type is not None)):
                     x.response_type = item.my_response_type
                 attendee.params['cn']       = x.mailbox.name 
