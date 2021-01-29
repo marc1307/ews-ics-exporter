@@ -6,7 +6,9 @@ Exports Microsoft Exchange Calendar to a .ics file
 ~/ews-ics-exporter$ python3 -m venv env
 ~/ews-ics-exporter$ source env/bin/activate
 ~/ews-ics-exporter$ pip install -r requirements.txt
+~/ews-ics-exporter$ cp config.sample.json config.json
 ```
+and customize config.json accordingly
 
 ## Run
 ```
