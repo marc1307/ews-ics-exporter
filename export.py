@@ -14,8 +14,8 @@ def readCfg():
 
 def connectToMsx():
     cfg = readCfg()
-    today = datetime.today()
-
+    today = datetime.today().replace(hour=0, minute=0, second=0)
+    
     credentials = Credentials(username=cfg['auth']['username'], password=cfg['auth']['password'])
     account = Account(primary_smtp_address=cfg['auth']['email'], credentials=credentials, autodiscover=True, access_type=DELEGATE)
 
@@ -23,7 +23,7 @@ def connectToMsx():
         start = account.default_timezone.localize(EWSDateTime.from_datetime(today)) + timedelta(days=cfg['export']['last']*-1), 
         end   = account.default_timezone.localize(EWSDateTime.from_datetime(today)) + timedelta(days=cfg['export']['next']),
     )
-    
+
     return calendarItems
 
 def generateIcs(calendarItems):
