@@ -1,4 +1,6 @@
 import json, os, pytz
+from exchangelib import ewsdatetime
+from exchangelib.ewsdatetime import EWSTimeZone
 from datetime import datetime, timedelta
 
 from exchangelib import Account, Credentials, DELEGATE 
@@ -14,14 +16,14 @@ def readCfg():
 
 def connectToMsx():
     cfg = readCfg()
-    today = datetime.today().replace(hour=0, minute=0, second=0)
+    today = datetime.today().replace(hour=0, minute=0)
     
     credentials = Credentials(username=cfg['auth']['username'], password=cfg['auth']['password'])
     account = Account(primary_smtp_address=cfg['auth']['email'], credentials=credentials, autodiscover=True, access_type=DELEGATE)
 
     calendarItems = account.calendar.view (
-        start = account.default_timezone.localize(EWSDateTime.from_datetime(today)) + timedelta(days=cfg['export']['last']*-1), 
-        end   = account.default_timezone.localize(EWSDateTime.from_datetime(today)) + timedelta(days=cfg['export']['next']),
+        start = EWSDateTime.from_datetime(today.replace(tzinfo=account.default_timezone) + timedelta(days=cfg['export']['last']*-1)),
+        end   = EWSDateTime.from_datetime(today.replace(tzinfo=account.default_timezone) + timedelta(days=cfg['export']['next'])),
     )
 
     return calendarItems
@@ -35,12 +37,12 @@ def generateIcs(calendarItems):
 
     for item in calendarItems:
         try:
-            tzOverwriteStart = pytz.timezone(item._start_timezone.zone)
-            tzOverwriteEnd   = pytz.timezone(item._end_timezone.zone)
+            tzOverwriteStart = pytz.timezone(item._start_timezone.key)
+            tzOverwriteEnd   = pytz.timezone(item._end_timezone.key)
             item.start       = item.start.astimezone(tz=tzOverwriteStart)
             item.end         = item.end.astimezone(tz=tzOverwriteEnd)
-        except:
-            print("Meh. timezones...")
+        except Exception as e:
+            print("Meh. timezones... (Item: {} - {})".format(item.subject, e))
 
         event = Event()
         if item.sensitivity == 'Private':
@@ -58,12 +60,12 @@ def generateIcs(calendarItems):
         if item.text_body is not None:
             event.add('description',    item.text_body)
 
-
-        if item.is_all_day:
-            item.start= item.start + timedelta(days=1)
-            event['dtstart'] =        vDate(item.start.replace(hour=0, minute=0, second=0))
-            item.end= item.end + timedelta(days=1)
-            event['dtend'] =          vDate(item.end.replace(hour=0, minute=0, second=0))
+        # Workaround no longer needed, Exchangelib now sends Date instead of Datetime for allday events - yay
+        # if item.is_all_day:
+        #     item.start= item.start + timedelta(days=1)
+        #     event['dtstart'] =        vDate(item.start.replace(hour=0, minute=0, second=0))
+        #     item.end= item.end + timedelta(days=1)
+        #     event['dtend'] =          vDate(item.end.replace(hour=0, minute=0, second=0))
 
         if item.subject.startswith(tuple(cfg['manipulation']['convertToAllday']['startsWith'])):
             event['dtstart'] =        vDate(item.start.replace(hour=0, minute=0, second=0))
